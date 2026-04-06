@@ -21,6 +21,16 @@ pipeline {
 
             }
         }
+        stage ('install dependencies') {
+            steps {
+                script {
+                    sh """
+                       npm install
+                       echo "dependencies installed"
+                    """
+                }
+            }
+        }
     
 
    
