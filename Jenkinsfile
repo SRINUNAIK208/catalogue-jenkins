@@ -13,6 +13,9 @@ pipeline {
         timeout(time: 30, unit: 'MINUTES')
         disableConcurrentBuilds()
     }
+    parameters{
+        booleanParam(name: 'deploy', defaultValue: false, description: 'Toggle this value')
+    }
 
     stages {
         stage ('Read package.json') {
@@ -35,10 +38,19 @@ pipeline {
                 }
             }
         }
+          stage ('UNIT TESTING') {
+            steps {
+                script {
+                    sh """
+                       echo "unit testing"
+                    """
+                }
+            }
+        }
          stage ('Docker build') {
             steps {
                 script {
-                    withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
+                    withAWS(credentials: 'aws-auth', region: 'us-east-1') {
                         sh """
                           aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com
                           docker build -t ${ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/${PROJECT}/${COMPONENT}:${appVersion} .
@@ -47,7 +59,24 @@ pipeline {
                     }
                 }
             }
+
         }
+        // stage("Trigger deploy"){
+        //     when{
+        //         expression { param.deploy }
+        //     }
+        //     steps{
+        //         script{
+        //            build job: 'catalogue-cd',
+        //            parameters: [
+        //              string(name: 'appVersion', value: "${appVersion}")
+        //              choice(name:'deploy_to', value: 'dev')
+        //            ],
+        //            propagate: false,
+        //            wait: false
+        //         }
+        //     }
+        // }
     
 
    
