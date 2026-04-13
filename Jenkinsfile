@@ -63,7 +63,7 @@ pipeline {
         }
         stage("Trigger deploy"){
             when{
-                expression { param.deploy }
+                expression { params.deploy }
             }
             steps{
                 script{
