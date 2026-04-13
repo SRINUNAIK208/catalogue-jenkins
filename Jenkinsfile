@@ -61,22 +61,22 @@ pipeline {
             }
 
         }
-        // stage("Trigger deploy"){
-        //     when{
-        //         expression { param.deploy }
-        //     }
-        //     steps{
-        //         script{
-        //            build job: 'catalogue-cd',
-        //            parameters: [
-        //              string(name: 'appVersion', value: "${appVersion}")
-        //              choice(name:'deploy_to', value: 'dev')
-        //            ],
-        //            propagate: false,
-        //            wait: false
-        //         }
-        //     }
-        // }
+        stage("Trigger deploy"){
+            when{
+                expression { param.deploy }
+            }
+            steps{
+                script{
+                   build job: 'catalogue-cd',
+                   parameters: [
+                     string(name: 'appVersion', value: "${appVersion}")
+                     choice(name:'deploy_to', value: 'dev')
+                   ],
+                   propagate: false,
+                   wait: false
+                }
+            }
+        }
     
 
    
