@@ -74,6 +74,37 @@ pipeline {
             }
 
         }
+        stage('check ecr scan'){
+            steps{
+                script{
+                    withAWS(credentials: 'aws-auth', region: 'us-east-1') {
+                        sh """
+                          aws ecr describe-image-scan-findings \
+                           --repository-name ${PROJECT}/${COMPONENT} \
+                           --image-id imageTag=${appVersion} \
+                           --query 'imageScanFindings.findingSeverityCounts' \
+                           --output json > scan.json
+                        """
+                    }
+                }   
+            }
+        }
+        stage('Quality gate'){
+            steps{
+                script{
+                    def scan = readJSON file: 'scan.json'
+                    def high = scan.HIGH ?: 0
+                    def critical = scan.CRITICAL ?: 0
+
+            if (high> 0 || critical > 0) {
+                error "❌ Vulnerabilities found: HIGH=${high}, CRITICAL=${critical}"
+            } else {
+                echo "✅ Image is safe"
+            }
+                }
+            }
+        }
+
         stage("Trigger deploy"){
             when{
                 expression { params.deploy }
