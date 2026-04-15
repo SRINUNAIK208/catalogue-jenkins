@@ -83,6 +83,7 @@ pipeline {
                           aws ecr describe-image-scan-findings \
                            --repository-name ${PROJECT}/${COMPONENT} \
                            --image-id imageTag=${appVersion} \
+                           ---region us-east-1 \
                            --query 'imageScanFindings.findingSeverityCounts' \
                            --output json > scan.json
                         """
