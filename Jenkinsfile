@@ -79,6 +79,7 @@ pipeline {
                 script{
                     withAWS(credentials: 'aws-auth', region: 'us-east-1') {
                         sh """
+                          sleep 30
                           aws ecr describe-image-scan-findings \
                            --repository-name ${PROJECT}/${COMPONENT} \
                            --image-id imageTag=${appVersion} \
