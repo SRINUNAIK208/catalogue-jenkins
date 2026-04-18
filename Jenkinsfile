@@ -2,6 +2,6 @@
 
 def configMap = [
     project : "roboshop"
-    componenet : "catalogue"
+    component : "catalogue"
 ]
 simplepipeline.call(configMap)  
