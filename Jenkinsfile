@@ -4,4 +4,5 @@ def configMap = [
     project : "roboshop",
     component : "catalogue"
 ]
-simplepipeline.call(configMap)  
+//simplepipeline.call(configMap)  
+nodeEkspipeline.call(configMap)
