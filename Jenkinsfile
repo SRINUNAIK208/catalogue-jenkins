@@ -5,4 +5,9 @@ def configMap = [
     component : "catalogue"
 ]
 //simplepipeline.call(configMap)  
-nodeEkspipeline.call(configMap)
+if( ! env.BRANCH_NAME.equalsIgnoreCase('main')){
+   nodeEkspipeline.call(configMap)
+}
+else {
+   echo "proces with PROD process"
+}
